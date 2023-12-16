@@ -1,0 +1,170 @@
+{% extends "base.html" %}
+{% load static %}
+{% block head%}
+<head>
+    <meta charset="UTF-8">
+
+
+
+    <title>my favorite places</title>
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="{% static 'map.css' %}"
+    />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400&family=Oswald&display=swap" rel="stylesheet">
+
+
+
+        </head>
+{% endblock %}
+
+
+{% block content %}
+<body>
+<main>
+    <!-- Navbar-->
+    <nav class="navbar navbar-expand-lg bg-primary fixed-top"  >
+  <div class="container-fluid">
+    <span class="material-symbols-outlined" id="side-bar-button">
+menu
+</span>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+
+
+
+        <form action="/tracks/dodaj_trase/" method='post' id="uploadForm" enctype="multipart/form-data">
+        {% csrf_token %}
+
+            <input type="text" placeholder="tutaj wpisz tytuł trasy" name="track_title" id="name_add">
+        <label for="track_color" class="color-label" >wybierz kolor:</label>
+            <input class="jscolor" placeholder="wybierz kolor" id="track_color" name="track_color" value="ff0000">
+         <div class="input-container">
+        <input type="file" name="gpx_track" id="gpx_add" placeholder="Write a description about your product">
+             </div>
+        <button type="submit" id="add">Zapisz</button>
+       </form>
+
+
+
+      </ul>
+
+        {% if user.is_authenticated %}
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown2" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+
+          Witaj, {{ user.username}}
+          <a class="nav-link" href="{% url 'account_logout' %}">Wyloguj</a>
+
+            </a>
+          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <li><a class="dropdown-item"  href="{% url 'account_change_password' %}">Zmień hasło</a></li>
+            <li><a class="dropdown-item"  href="{% url 'account_email' %}">zmień adres e-mail</a></li>
+
+          </ul>
+        </li>
+        {% else %}
+        <li class="nav-item dropdown">
+        <a class="nav-link" href="{% url 'account_login' %}">Zaloguj</a>
+        <a class="nav-link" href="{% url 'account_signup' %}">Zarejestruj</a>
+      </li>
+        {% endif %}
+    </div>
+  </div>
+</nav>
+    <!-- end Navbar-->
+<!--<form method="post"  id='django-form' enctype="multipart/form-data">-->
+<!--    {% csrf_token %}-->
+<!--    {{ form.as_p }}-->
+<!--    <button type="submit">Upload</button>-->
+<!--</form>-->
+<div class="grid-container">
+<!-- sidebar-->
+    <aside id="sidebar" class="hidden">
+                <div class="sidebar-title">
+                    <div class="sidebar-brand">
+
+
+
+                        <div class="card-container" id="cards">
+
+                            </div>
+                    </div>
+
+                </div>
+
+            </aside>
+    <!-- end sidebar-->
+
+    <!-- modal-->
+
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+        <button type="button" id='x-button' class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form action="" method='post' name='' id="uploadEditForm" enctype="multipart/form-data">
+        {% csrf_token %}
+            <label for="name-edit"> tytuł trasy:</label>
+            <input type="text" name="name-edit" id="name-edit">
+            <br>
+        <label for="track-color-edit">Select Track Color:</label>
+            <input class="jscolor" data-jscolor="{preset:'dark large'}" id="track-color-edit" name="track-color-edit" value="">
+
+        <input type="file" name="gpx-track-edit" id="gpx-track-edit" placeholder="Write a description about your product">
+        <button type="submit" id='save-changes'>Save</button>
+       </form>
+      </div>
+      <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" id='close-edit-modal' data-dismiss="modal">Close</button>
+
+      </div>
+    </div>
+  </div>
+</div>
+    <!--end modal--->
+        <div id="map" class="map"></div>
+
+</div>
+<!--delete modal-->
+<div class="modal" tabindex="-1" id="deleteModal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Usuwanie trasy</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p>Czy na pewno chcesz usunąc tras.</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" id="confirm-delete-button" onclick="">Usuń </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- end delete modal>-->
+</main>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+    <script src="{% static 'myjs.js' %}" charset="utf-8"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jscolor/2.4.5/jscolor.min.js"></script>
+
+</body>
+{% endblock content %}

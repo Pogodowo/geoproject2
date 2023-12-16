@@ -1,0 +1,55 @@
+
+{% extends "base.html" %}
+{% load i18n %}
+{% load static %}
+{% block head%}
+<head>
+    <meta charset="UTF-8">
+
+
+
+    <title>my favorite places</title>
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="{% static 'home.css' %}"
+    />
+     <link rel="preconnect" href="https://fonts.googleapis.com">
+     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+     <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600&family=Nunito:ital,wght@0,400;1,800&display=swap" rel="stylesheet">
+
+
+
+
+        </head>
+{% endblock %}
+
+{% block content %}
+ <body>
+
+<div id="home-body">
+<h1 id="main-title">Podróżownik</h1>
+<div id="login-form">
+
+<form class="login" method="POST" action="{% url 'account_login' %}">
+<p id="login-text">Logowanie</p>
+  {% csrf_token %}
+<!--  {{ form.as_p }}-->
+    {{ form.login }}
+    <br>
+    {{ form.password }}
+  {% if redirect_field_value %}
+  <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
+  {% endif %}
+
+<!--<a class="button secondaryAction" href="{% url 'account_reset_password' %}">{% trans "Forgot Password?" %}</a>-->
+<button class="primaryAction" type="submit" >{% trans "Sign In" %}</button>
+ <a class="my-button" id="signup-button" href="{% url 'account_signup' %}">Zarejestruj</a>
+ <a class="my-button" id="reset-button" href="{% url 'account_reset_password' %}">{% trans "Forgot Password?" %}</a>
+
+</form>
+</div>
+
+  </div>
+ </body>
+{% endblock %}

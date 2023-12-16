@@ -1,0 +1,170 @@
+
+
+
+
+
+ main {
+        padding-top: 64px; /* Adjust this value to match your navbar height */
+        font-family: 'Inter', sans-serif;
+        font-weight:300;
+    }
+/*---------------- navbar------------------*/
+.nav-item .nav-link{
+color: #d7dbd0;
+font-weight:600;
+}
+
+/*---------------- navbar------------------*/
+#map {
+grid-area: map;
+  height: 100vh;
+  width: 185vh;
+margin-left: 0; /* Initially set margin to 0 */
+    transition: margin-left 0.3s ease;
+}
+
+#map.hidden-sidebar {
+   margin-left: 0px;
+
+   /* Adjust margin when sidebar is visible */
+}
+
+.material-symbols-outlined {
+  font-variation-settings:
+  'FILL' 0,
+  'wght' 400,
+  'GRAD' 0,
+  'opsz' 24
+}
+
+.grid-container {
+    display:grid;
+    grid-template-columns: 0px 1fr  ;
+
+    grid-template-areas:
+    "sidebar map "
+    "sidebar map "
+    ;
+
+    height: 100vh;
+    transition: grid-template-columns 0.3s ease; /* Add transition */
+
+}
+/*-----stylizacja formularza do ładowania plików*/
+
+#uploadForm{
+margin-left:20px;
+display:flex;
+align-items: center;
+gap: 10px;
+}
+
+.input-container {
+  background-color: white;
+  border: 1px solid #e5e5e5;
+  margin: 10px;
+  height: 30px;
+}
+
+
+input[type=file]::file-selector-button {
+  background-color: #fff;
+  color: #000;
+  border: 0px;
+  border-right: 1px solid #e5e5e5;
+  padding: 3px 10px;
+  margin-right: 20px;
+  transition: .5s;
+  height: 29px;
+}
+
+input[type=file]::file-selector-button:hover {
+  background-color: #eee;
+  border: 0px;
+  border-right: 1px solid #e5e5e5;
+}
+/*----- koniec stylizacja formularza doładowania plików*/
+
+#sidebar {
+grid-area: sidebar;
+background-color:#ebedda;
+margin-top: 1px;
+overflow: hidden; /* Ensure sidebar content doesn't overflow */
+width: 280px; /* Set sidebar width */
+transition: width 0.3s ease; /* Apply transition */
+}
+
+#sidebar.hidden {
+        width: 0; /* Reduce width to 0 when hidden */
+        }
+
+#color-bar{
+width: 60px;
+height :20px;
+}
+
+.card{
+background-color: #f0ece1 !important;
+border-radius: 0px !important;
+
+}
+.card:hover{
+background-color: #c7cca5 !important;
+}
+.card p{
+font-family: 'Oswald', sans-serif;
+font-size: 18px;
+padding:4px;
+margin: 3px;
+
+}
+
+.edit ,.delete {
+background-color: #53805f;
+color: white;
+padding: 3px;
+border-radius:0px;
+margin: 0px;
+width: 139px;
+font-size:15px;
+}
+
+/* --------modal do edycji------------------------*/
+.modal-body{
+background-color: #a2c9eb;
+}
+
+#uploadEditForm label {
+
+margin-left: 10px;
+margin-bottom: 12px;
+width: 150px;
+}
+
+#uploadEditForm input {
+width: 250px;
+font-weight:300;
+}
+
+#uploadEditForm #gpx-track-edit {
+width: 320px;
+}
+
+#save-changes, #add{
+border: none;
+width: 90px;
+height: 33px;
+color:#f5faf6;
+background-color:#1c9933;
+border-radius: 5px;
+}
+
+.close{
+border:none;
+width: 30px;
+font-size:20px;
+font-weight:600;
+color:white;
+border-radius: 50px;
+background-color:#788087;
+}
